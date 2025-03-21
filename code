@@ -1,0 +1,39 @@
+import java.util.*;
+public class Main {
+  public static void main(String[] args) {
+    Scanner in=new Scanner(System.in);
+    System.out.println("Welcome to the Imposter Syndrome Helper. Imposter Syndrome is the constant inability to           believe that one's success is deserved or has been legitimately achieved as a result of one's own efforts or          skills. Here you can talk through your issues struggling with Imposter Syndrome.");
+    System.out.println("What is your name?");
+    String name=in.nextLine();
+    System.out.println("Hello "+name+"! Tell me a bit about your battle with Imposter Syndrome (Use keywords like hard, long, short, getting better)");
+    String batt=in.nextLine();
+    if(batt.contains("long")||batt.contains("Long")||batt.contains("hard")||batt.contains("Hard")){
+      System.out.println("");
+      System.out.println("I'm sorry to hear that. Having a long or hard battle with Imposter Syndrome must be really hard. Not having any confidence in your self or see your own value. I want you to understand that you are unbelivlby strong and acomplished. Fighting this battle is one in battle you have won. You have not given up yet, your strong.");
+      System.out.println("");
+      System.out.println("Here are ways you can begin to end your battle with Imposter Syndrome:");
+      System.out.println("Realize that just because you may feel stupid, doesn’t mean you are.")
+      System.out.println("Mainfest postive thoughts about acomplishments.");
+      System.out.println("Reward yourself after completeing achievements");
+    }
+    else if(batt.contains("short")||batt.contains("Short")){
+       System.out.println("Just starting to feel this way must be really hard. I want you to unserstadn how much you have acomplished to be where you are right now. There is no reason to doubt yourself or undermine your acomplishments.");
+      System.out.println("");
+      System.out.println("Here are ways you can begin to end your battle with Imposter Syndrome:");
+      System.out.println("Realize that just because you may feel stupid, doesn’t mean you are.")
+      System.out.println("Mainfest postive thoughts about acomplishments.");
+      System.out.println("Reward yourself after completeing achievements");
+    }
+    else if(batt.contains("getting better")||batt.contains("Getting better")){
+       System.out.println("I am so happy to hear that you are getting better. You are fighting through this hard battle and have made an inreadiblely huge amcomplishment by even just trying to get bettter, let alone actualy getting better. You must keepo fighting to end this. I know you have it  in you to.");
+      System.out.println("");
+      System.out.println("Here are ways you can begin to end your battle with Imposter Syndrome:");
+      System.out.println("Realize that just because you may feel stupid, doesn’t mean you are.")
+      System.out.println("Mainfest postive thoughts about acomplishments.");
+      System.out.println("Reward yourself after completeing achievements");
+    }
+    
+  }
+
+ 
+}
