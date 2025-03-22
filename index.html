@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FISH</title>
+    <style>
+        #game-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background-color: rgba(255, 255, 255, 0.7);
+            color: #333;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #game-btn:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+                
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #cbd3ad;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            position: relative;
+
+            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            font-weight: 600;
+            font-size: 42px;
+            color: #333;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        #about-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background-color: rgba(255, 255, 255, 0.7);
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #about-btn:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+        #chat-container {
+            width: 400px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            position: relative;
+        }
+
+        #chat-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+            border-radius: 16px 16px 0 0;
+            pointer-events: none;
+        }
+        #output {
+            padding: 20px;
+            height: 300px;
+            overflow-y: scroll;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+            color: #333;
+        }
+        #input-container {
+            display: flex;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+        #input {
+            flex: 1;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        #input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+        }
+        #input::placeholder {
+            color: rgba(51, 51, 51, 0.6);
+        }
+        #send-btn {
+            margin-left: 10px;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: rgba(51, 51, 51, 0.8);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        #send-btn:hover {
+            background-color: rgba(51, 51, 51, 1);
+            transform: translateY(-2px);
+        }
+        .bot-message {
+            background-color: rgba(220, 220, 220, 0.8);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            color: #333;
+            max-width: 85%;
+        }
+        .user-message {
+            background-color: rgba(200, 200, 200, 0.9);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            margin-left: auto;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            color: #333;
+            text-align: right;
+            max-width: 85%;
+        }
+        #about-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 35px;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 80%;
+            position: relative;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            color: #333;
+        }
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(200, 200, 200, 0.7);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        .close-modal:hover {
+            background: rgba(180, 180, 180, 0.9);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(200, 200, 200, 0.3);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(150, 150, 150, 0.5);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 100, 100, 0.7);
+        }
+        
+        @media (max-width: 500px) {
+            #chat-container {
+                width: 90%;
+            }
+            h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button id="about-btn">About Us</button>
+    <a href="game.html" id="game-btn">Game</a>
+    
+    <header>
+        <h1>FISH</h1>
+    </header>
+    
+    <div id="chat-container">
+        <div id="output"></div>
+        <div id="input-container">
+            <input type="text" id="input" placeholder="Type your message here">
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+
+    <div id="about-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>About Our Team</h2>
+            <h3>Vivan Jaiswal</h3>
+            <p>Hi! I'm a 9th grader at Sharon High School and I love coding and playing chess.</p>
+            <h3>Neev Lodha</h3>
+            <p>---</p>
+            <h3>Aryav Sharma</h3>
+            <p>---</p>
+            <h3>Ariv Kerur</h3>
+            <p>---</p>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const outputDiv = document.getElementById("output");
+            const inputField = document.getElementById("input");
+            const sendButton = document.getElementById("send-btn");
+            const aboutBtn = document.getElementById("about-btn");
+            const aboutModal = document.getElementById("about-modal");
+            const closeModal = document.querySelector(".close-modal");
+            
+            aboutBtn.addEventListener("click", () => {
+                aboutModal.style.display = "flex";
+            });
+            
+            closeModal.addEventListener("click", () => {
+                aboutModal.style.display = "none";
+            });
+            
+            window.addEventListener("click", (event) => {
+                if (event.target === aboutModal) {
+                    aboutModal.style.display = "none";
+                }
+            });
+            
+            setTimeout(() => {
+                displayBotMessage("Hi there! I'm your Friendly Imposter Syndrome Helper (FISH). I can help you with several aspects of imposter syndrome:\n\n• Long-term struggles with self-doubt\n• Recent feelings of being an imposter\n• Progress in overcoming imposter syndrome\n• Feeling overwhelmed or anxious\n• Undervaluing your skills and accomplishments\n• Difficulty accepting success or recognition\n\nHow have you been feeling lately?");
+            }, 500);
+
+            const responses = {
+                greeting: "Hello! I'm your Friendly Imposter Syndrome Helper (FISH). I can help you with several aspects of imposter syndrome:\n\n• Long-term struggles with self-doubt\n• Recent feelings of being an imposter\n• Progress in overcoming imposter syndrome\n• Feeling overwhelmed or anxious\n• Undervaluing your skills and accomplishments\n• Difficulty accepting success or recognition\n\nWhat's been on your mind lately?",
+                
+                longOrHard: "It sounds like this has been a challenging journey for you. Recognizing your feelings is the first step. Here's how to move forward:\n\n• Keep a 'success journal' to document your achievements, big and small\n• Create a habit of celebrating your wins daily\n• Challenge negative thoughts by asking, 'What evidence contradicts this belief?'\n\nWould you like to discuss any specific situations where you've felt like an imposter?",
+                
+                short: "Even if your feelings of doubt are recent, it's wonderful that you're addressing them now. Here's what can help:\n\n• Make a list of positive feedback you've received\n• Reach out to supportive friends or mentors\n• Break big tasks into smaller steps and acknowledge each completion\n\nWhat accomplishment are you most proud of, even if it feels small?",
+                
+                gettingBetter: "It's fantastic to hear that you're making progress! Keep the momentum going with these strategies:\n\n• Regularly remind yourself of past achievements\n• Practice mindfulness to stay present and positive\n• Use affirmations like 'I am worthy of my success'\n\nWhat positive changes have you noticed in yourself recently?",
+                
+                overwhelmed: "Feeling overwhelmed is completely normal. Take a deep breath with me. Here's what might help right now:\n\n• Focus on just one task at a time\n• Write down 3 things you're proud of today\n• Speak to yourself with kindness—as you would to a friend\n\nWhat's one small step you could take today?",
+                
+                undervalue: "If you're undervaluing your efforts or skills, know that you deserve full credit for your work. Let's try:\n\n• Listing 5 specific skills you bring to the table\n• Remembering that success isn't about perfection\n• Practicing saying 'thank you' when receiving compliments\n\nWhat strengths do others see in you that you might not fully recognize?",
+                
+                success: "Your success is real and earned through your hard work. Try these approaches:\n\n• Reframe your thoughts: 'I worked hard for this outcome'\n• Share your journey with others—you might inspire them\n• Accept compliments with a simple 'thank you'\n\nWhat success are you having trouble owning right now?",
+                
+                default: "Thank you for sharing. Recognizing and addressing your feelings is a significant step forward. Is there a specific situation where these feelings come up strongest for you?"
+            };
+
+            const keywords = {
+                "hi": "greeting",
+                "hello": "greeting",
+                "hey": "greeting",
+                "howdy": "greeting",
+                "greetings": "greeting",
+                
+                "long time": "longOrHard",
+                "always felt": "longOrHard",
+                "years": "longOrHard",
+                "difficult": "longOrHard",
+                "struggle": "longOrHard",
+                
+                "recently": "short",
+                "just started": "short",
+                "new job": "short",
+                "promotion": "short",
+                "began feeling": "short",
+                
+                "getting better": "gettingBetter",
+                "improving": "gettingBetter",
+                "progress": "gettingBetter",
+                "working on it": "gettingBetter",
+                
+                "overwhelmed": "overwhelmed",
+                "anxious": "overwhelmed",
+                "stressed": "overwhelmed",
+                "doubt": "overwhelmed",
+                "worried": "overwhelmed",
+                
+                "not good enough": "undervalue",
+                "undeserving": "undervalue",
+                "undervalue": "undervalue",
+                "unqualified": "undervalue",
+                "fake": "undervalue",
+                
+                "success": "success",
+                "achievement": "success",
+                "accomplished": "success",
+                "recognition": "success",
+                "award": "success",
+                "praised": "success"
+            };
+
+            function displayUserMessage(message) {
+                outputDiv.innerHTML += `<div class="user-message"><strong>You:</strong> ${message}</div>`;
+                outputDiv.scrollTop = outputDiv.scrollHeight;
+            }
+
+            function displayBotMessage(message) {
+                const formattedMessage = message.replace(/\n/g, '<br>');
+                outputDiv.innerHTML += `<div class="bot-message"><strong>FISH:</strong> ${formattedMessage}</div>`;
+                outputDiv.scrollTop = outputDiv.scrollHeight;
+            }
+
+            inputField.addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    sendButton.click();
+                }
+            });
+
+            sendButton.addEventListener("click", () => {
+                const userMessage = inputField.value.trim();
+                if (!userMessage) return;
+                
+                displayUserMessage(userMessage);
+                
+                inputField.value = "";
+                
+                setTimeout(() => {
+                    const userMessageLower = userMessage.toLowerCase();
+                    let responseKey = "default";
+                    
+                    for (const keyword in keywords) {
+                        if (userMessageLower.includes(keyword)) {
+                            responseKey = keywords[keyword];
+                            break;
+                        }
+                    }
+                    
+                    displayBotMessage(responses[responseKey]);
+                }, 800);
+            });
+            
+            // Check for backdrop filter support
+            const isBackdropFilterSupported = CSS.supports('backdrop-filter', 'blur(1px)') || 
+                                            CSS.supports('-webkit-backdrop-filter', 'blur(1px)');
+            
+            if (!isBackdropFilterSupported) {
+                document.documentElement.style.setProperty('--fallback-bg', 'rgba(255, 255, 255, 0.85)');
+                
+                const styleSheet = document.createElement('style');
+                styleSheet.textContent = `
+                    #chat-container, .bot-message, .user-message, #input-container, #input, #send-btn, .modal-content {
+                        background-color: var(--fallback-bg) !important;
+                    }
+                `;
+                document.head.appendChild(styleSheet);
+            }
+        });
+    </script>
+</body>
+</html>
